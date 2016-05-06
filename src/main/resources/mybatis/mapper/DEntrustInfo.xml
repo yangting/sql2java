@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyyt.syncdb.metadata.dao.mapper.DEntrustInfoMapper">
+
+<resultMap type="com.dyyt.syncdb.metadata.entity.DEntrustInfo" id="DEntrustInfoMap">
+<id property="id" column="id" />
+<result property="initDate" column="init_date" />
+<result property="currDate" column="curr_date" />
+<result property="currTime" column="curr_time" />
+<result property="entrustNo" column="entrust_no" />
+<result property="opBranchNo" column="op_branch_no" />
+<result property="operatorNo" column="operator_no" />
+<result property="opEntrustWay" column="op_entrust_way" />
+<result property="opStation" column="op_station" />
+<result property="batchNo" column="batch_no" />
+<result property="branchNo" column="branch_no" />
+<result property="fundAccount" column="fund_account" />
+<result property="clientId" column="client_id" />
+<result property="otcexchType" column="otcexch_type" />
+<result property="otcAccount" column="otc_account" />
+<result property="otcreportAccount" column="otcreport_account" />
+<result property="seatNo" column="seat_no" />
+<result property="propSeatNo" column="prop_seat_no" />
+<result property="otcCode" column="otc_code" />
+<result property="otcName" column="otc_name" />
+<result property="otcType" column="otc_type" />
+<result property="entrustAmount" column="entrust_amount" />
+<result property="entrustPrice" column="entrust_price" />
+<result property="invPromiseNo" column="inv_promise_no" />
+<result property="otcPromiseNo" column="otc_promise_no" />
+<result property="otcProp" column="otc_prop" />
+<result property="reportTime" column="report_time" />
+<result property="reportNo" column="report_no" />
+<result property="recordNo" column="record_no" />
+<result property="businessPrice" column="business_price" />
+<result property="businessAmount" column="business_amount" />
+<result property="withdrawAmount" column="withdraw_amount" />
+<result property="businessBalance" column="business_balance" />
+<result property="clearBalance" column="clear_balance" />
+<result property="prevBalance" column="prev_balance" />
+<result property="reportBs" column="report_bs" />
+<result property="storeUnit" column="store_unit" />
+<result property="reportUnit" column="report_unit" />
+<result property="errorNo" column="error_no" />
+<result property="entrustStatus" column="entrust_status" />
+<result property="moneyType" column="money_type" />
+<result property="clientGroup" column="client_group" />
+<result property="roomCode" column="room_code" />
+<result property="cancelSerialno" column="cancel_serialno" />
+<result property="otcfareKind" column="otcfare_kind" />
+<result property="positionStr" column="position_str" />
+</resultMap>
+
+<select id="getEntity" resultMap="DEntrustInfoMap">
+select * from d_entrust_info where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into d_entrust_info(id,init_date,curr_date,curr_time,entrust_no,op_branch_no,operator_no,op_entrust_way,op_station,batch_no,branch_no,fund_account,client_id,otcexch_type,otc_account,otcreport_account,seat_no,prop_seat_no,otc_code,otc_name,otc_type,entrust_amount,entrust_price,inv_promise_no,otc_promise_no,otc_prop,report_time,report_no,record_no,business_price,business_amount,withdraw_amount,business_balance,clear_balance,prev_balance,report_bs,store_unit,report_unit,error_no,entrust_status,money_type,client_group,room_code,cancel_serialno,otcfare_kind,position_str) values(#{id},#{initDate},#{currDate},#{currTime},#{entrustNo},#{opBranchNo},#{operatorNo},#{opEntrustWay},#{opStation},#{batchNo},#{branchNo},#{fundAccount},#{clientId},#{otcexchType},#{otcAccount},#{otcreportAccount},#{seatNo},#{propSeatNo},#{otcCode},#{otcName},#{otcType},#{entrustAmount},#{entrustPrice},#{invPromiseNo},#{otcPromiseNo},#{otcProp},#{reportTime},#{reportNo},#{recordNo},#{businessPrice},#{businessAmount},#{withdrawAmount},#{businessBalance},#{clearBalance},#{prevBalance},#{reportBs},#{storeUnit},#{reportUnit},#{errorNo},#{entrustStatus},#{moneyType},#{clientGroup},#{roomCode},#{cancelSerialno},#{otcfareKind},#{positionStr})
+</insert>
+
+<insert id="batchAdd">insert into d_entrust_info(id,init_date,curr_date,curr_time,entrust_no,op_branch_no,operator_no,op_entrust_way,op_station,batch_no,branch_no,fund_account,client_id,otcexch_type,otc_account,otcreport_account,seat_no,prop_seat_no,otc_code,otc_name,otc_type,entrust_amount,entrust_price,inv_promise_no,otc_promise_no,otc_prop,report_time,report_no,record_no,business_price,business_amount,withdraw_amount,business_balance,clear_balance,prev_balance,report_bs,store_unit,report_unit,error_no,entrust_status,money_type,client_group,room_code,cancel_serialno,otcfare_kind,position_str) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{id},#{initDate},#{currDate},#{currTime},#{entrustNo},#{opBranchNo},#{operatorNo},#{opEntrustWay},#{opStation},#{batchNo},#{branchNo},#{fundAccount},#{clientId},#{otcexchType},#{otcAccount},#{otcreportAccount},#{seatNo},#{propSeatNo},#{otcCode},#{otcName},#{otcType},#{entrustAmount},#{entrustPrice},#{invPromiseNo},#{otcPromiseNo},#{otcProp},#{reportTime},#{reportNo},#{recordNo},#{businessPrice},#{businessAmount},#{withdrawAmount},#{businessBalance},#{clearBalance},#{prevBalance},#{reportBs},#{storeUnit},#{reportUnit},#{errorNo},#{entrustStatus},#{moneyType},#{clientGroup},#{roomCode},#{cancelSerialno},#{otcfareKind},#{positionStr})
+</foreach>
+</insert>
+
+<update id="update">
+update d_entrust_info
+<set><if test="id!=null" >
+id=#{id},
+</if>
+<if test="initDate!=null" >
+init_date=#{init_date},
+</if>
+<if test="currDate!=null" >
+curr_date=#{curr_date},
+</if>
+<if test="currTime!=null" >
+curr_time=#{curr_time},
+</if>
+<if test="entrustNo!=null" >
+entrust_no=#{entrust_no},
+</if>
+<if test="opBranchNo!=null" >
+op_branch_no=#{op_branch_no},
+</if>
+<if test="operatorNo!=null" >
+operator_no=#{operator_no},
+</if>
+<if test="opEntrustWay!=null" >
+op_entrust_way=#{op_entrust_way},
+</if>
+<if test="opStation!=null" >
+op_station=#{op_station},
+</if>
+<if test="batchNo!=null" >
+batch_no=#{batch_no},
+</if>
+<if test="branchNo!=null" >
+branch_no=#{branch_no},
+</if>
+<if test="fundAccount!=null" >
+fund_account=#{fund_account},
+</if>
+<if test="clientId!=null" >
+client_id=#{client_id},
+</if>
+<if test="otcexchType!=null" >
+otcexch_type=#{otcexch_type},
+</if>
+<if test="otcAccount!=null" >
+otc_account=#{otc_account},
+</if>
+<if test="otcreportAccount!=null" >
+otcreport_account=#{otcreport_account},
+</if>
+<if test="seatNo!=null" >
+seat_no=#{seat_no},
+</if>
+<if test="propSeatNo!=null" >
+prop_seat_no=#{prop_seat_no},
+</if>
+<if test="otcCode!=null" >
+otc_code=#{otc_code},
+</if>
+<if test="otcName!=null" >
+otc_name=#{otc_name},
+</if>
+<if test="otcType!=null" >
+otc_type=#{otc_type},
+</if>
+<if test="entrustAmount!=null" >
+entrust_amount=#{entrust_amount},
+</if>
+<if test="entrustPrice!=null" >
+entrust_price=#{entrust_price},
+</if>
+<if test="invPromiseNo!=null" >
+inv_promise_no=#{inv_promise_no},
+</if>
+<if test="otcPromiseNo!=null" >
+otc_promise_no=#{otc_promise_no},
+</if>
+<if test="otcProp!=null" >
+otc_prop=#{otc_prop},
+</if>
+<if test="reportTime!=null" >
+report_time=#{report_time},
+</if>
+<if test="reportNo!=null" >
+report_no=#{report_no},
+</if>
+<if test="recordNo!=null" >
+record_no=#{record_no},
+</if>
+<if test="businessPrice!=null" >
+business_price=#{business_price},
+</if>
+<if test="businessAmount!=null" >
+business_amount=#{business_amount},
+</if>
+<if test="withdrawAmount!=null" >
+withdraw_amount=#{withdraw_amount},
+</if>
+<if test="businessBalance!=null" >
+business_balance=#{business_balance},
+</if>
+<if test="clearBalance!=null" >
+clear_balance=#{clear_balance},
+</if>
+<if test="prevBalance!=null" >
+prev_balance=#{prev_balance},
+</if>
+<if test="reportBs!=null" >
+report_bs=#{report_bs},
+</if>
+<if test="storeUnit!=null" >
+store_unit=#{store_unit},
+</if>
+<if test="reportUnit!=null" >
+report_unit=#{report_unit},
+</if>
+<if test="errorNo!=null" >
+error_no=#{error_no},
+</if>
+<if test="entrustStatus!=null" >
+entrust_status=#{entrust_status},
+</if>
+<if test="moneyType!=null" >
+money_type=#{money_type},
+</if>
+<if test="clientGroup!=null" >
+client_group=#{client_group},
+</if>
+<if test="roomCode!=null" >
+room_code=#{room_code},
+</if>
+<if test="cancelSerialno!=null" >
+cancel_serialno=#{cancel_serialno},
+</if>
+<if test="otcfareKind!=null" >
+otcfare_kind=#{otcfare_kind},
+</if>
+<if test="positionStr!=null" >
+position_str=#{position_str},
+</if>
+</set>where id=#{id}
+</update>
+
+<delete id="remove">
+delete from d_entrust_info
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from d_entrust_info where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>

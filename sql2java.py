@@ -166,6 +166,12 @@ def wirteMyBatis(jt):
             s+="<result property=\""+f.java_fn+"\" column=\""+f.sql_fn+"\" />\n"
     s+="</resultMap>\n\n"
 
+    s+="<!-- auto implement code by "+jt.pkg+".metadata.dao.IBaseMapperDao.java -->"
+    s+="<select id=\"getEntity\" resultMap=\""+jt.clazz+"Map\">\n"
+    s+="select * from "+jt.table_name+" where id = #{"+jt.fields[0].java_fn+"}\n"
+    s+="</select>\n\n"
+
+
     s+="<insert id=\"add\">\n"
     s+="<selectKey resultType=\""+jt.fields[0].java_type+"\" order=\"AFTER\" keyProperty=\"id\">\n"
     s+="SELECT LAST_INSERT_ID() AS id\n"
@@ -194,11 +200,12 @@ def wirteMyBatis(jt):
 
 
     s+="<update id=\"update\">\n"
-    s+="update "+jt.table_name+ " set \n"
+    s+="update "+jt.table_name+ "\n<set>"
     for f in jt.fields:
         s+="<if test=\""+f.java_fn+"!=null\" >\n"
         s+=f.sql_fn+"=#{"+f.sql_fn+"},\n"
         s+="</if>\n"
+    s+="</set>"
     s+="where "+jt.fields[0].sql_fn+"=#{"+jt.fields[0].java_fn+"}\n"
     s+="</update>\n\n"
 
