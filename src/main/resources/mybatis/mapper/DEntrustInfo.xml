@@ -51,6 +51,7 @@
 <result property="positionStr" column="position_str" />
 </resultMap>
 
+<!-- auto implement code by com.dyyt.syncdb.metadata.dao.IBaseMapperDao.java -->
 <select id="getEntity" resultMap="DEntrustInfoMap">
 select * from d_entrust_info where id = #{id}
 </select>

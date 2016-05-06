@@ -130,8 +130,16 @@ def py2java(pkg,Database):
 
 
 def writeDotJava(jt):
+    author = """
+/**
+* 本段代码由sql2java自动生成.
+* git clone https://github.com/yangting/sql2java
+* @author Yate
+*/\n"""
+
     s = "package "+jt.pkg+".metadata.entity;\n"
     s +="import java.io.Serializable;\n"
+    s += author
     s +="public class "+jt.clazz+" implements Serializable{\n"        
 
     for f in jt.fields:

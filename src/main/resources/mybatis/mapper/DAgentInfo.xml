@@ -17,6 +17,7 @@
 <result property="developSource" column="develop_source" />
 </resultMap>
 
+<!-- auto implement code by com.dyyt.syncdb.metadata.dao.IBaseMapperDao.java -->
 <select id="getEntity" resultMap="DAgentInfoMap">
 select * from d_agent_info where id = #{id}
 </select>

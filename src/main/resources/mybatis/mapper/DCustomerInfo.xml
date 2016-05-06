@@ -43,6 +43,7 @@
 <result property="demiseTime" column="demise_time" />
 </resultMap>
 
+<!-- auto implement code by com.dyyt.syncdb.metadata.dao.IBaseMapperDao.java -->
 <select id="getEntity" resultMap="DCustomerInfoMap">
 select * from d_customer_info where id = #{id}
 </select>

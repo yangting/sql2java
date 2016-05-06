@@ -1,5 +1,11 @@
 package com.dyyt.syncdb.metadata.entity;
 import java.io.Serializable;
+
+/**
+* 本段代码由sql2java自动生成.
+* git clone https://github.com/yangting/sql2java
+* @author Yate
+*/
 public class DStockrealInfo implements Serializable{
 private Long id;
 private String otcAccount;

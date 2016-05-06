@@ -33,6 +33,7 @@
 <result property="positionStr" column="position_str" />
 </resultMap>
 
+<!-- auto implement code by com.dyyt.syncdb.metadata.dao.IBaseMapperDao.java -->
 <select id="getEntity" resultMap="DStockrealInfoMap">
 select * from d_stockreal_info where id = #{id}
 </select>

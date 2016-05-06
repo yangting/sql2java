@@ -38,6 +38,7 @@
 <result property="unfrozenBalance" column="unfrozen_balance" />
 </resultMap>
 
+<!-- auto implement code by com.dyyt.syncdb.metadata.dao.IBaseMapperDao.java -->
 <select id="getEntity" resultMap="DFundInfoMap">
 select * from d_fund_info where id = #{id}
 </select>
