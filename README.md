@@ -1,8 +1,12 @@
-# SQL转换Pojo工具
+# 工具箱
 
-###通过sql建表语句自动生成pojo对象
+## SQL转换POJO
+通过sql建表语句自动生成pojo对象
 
-## 使用方法
+### 系统需求
+<b>Required</b> python 2.7 or python 3.x
+
+### 使用方法
 python sql2java.py {sqlfile.path} {java.pkg.name}
 
 1. 参数sqlfile.path是输入Sql建表语句文件的路径
