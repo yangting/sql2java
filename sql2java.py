@@ -166,7 +166,7 @@ def wirteMyBatis(jt):
             s+="<result property=\""+f.java_fn+"\" column=\""+f.sql_fn+"\" />\n"
     s+="</resultMap>\n\n"
 
-    s+="<!-- auto implement code by "+jt.pkg+".metadata.dao.IBaseMapperDao.java -->"
+    s+="<!-- auto implement code by "+jt.pkg+".metadata.dao.IBaseMapperDao.java -->\n"
     s+="<select id=\"getEntity\" resultMap=\""+jt.clazz+"Map\">\n"
     s+="select * from "+jt.table_name+" where id = #{"+jt.fields[0].java_fn+"}\n"
     s+="</select>\n\n"
