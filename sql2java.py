@@ -95,6 +95,8 @@ def sqltype2javatype(type):
         return "String"
     if type == 'datetime': 
         return "Date"
+    if type == 'decimal':
+        return "Double"
     
 
 def py2java(pkg,Database):
@@ -127,13 +129,14 @@ def py2java(pkg,Database):
 
         writeDotJava(jt)
         wirteMyBatis(jt)
+        wirteMapper(jt)
 
 
 def writeDotJava(jt):
     author = """
 /**
 * 本段代码由sql2java自动生成.
-* git clone https://github.com/yangting/sql2java
+* https://github.com/yangting/sql2java
 * @author Yate
 */\n"""
 
@@ -211,9 +214,9 @@ def wirteMyBatis(jt):
     s+="update "+jt.table_name+ "\n<set>"
     for f in jt.fields:
         s+="<if test=\""+f.java_fn+"!=null\" >\n"
-        s+=f.sql_fn+"=#{"+f.sql_fn+"},\n"
+        s+=f.sql_fn+"=#{"+f.java_fn+"},\n"
         s+="</if>\n"
-    s+="</set>"
+    s+="</set>\n"
     s+="where "+jt.fields[0].sql_fn+"=#{"+jt.fields[0].java_fn+"}\n"
     s+="</update>\n\n"
 
@@ -238,7 +241,85 @@ def wirteMyBatis(jt):
     f.write(s) # python will convert \n to os.linesep
     f.close() # you can omit in most cases as the destructor will call it
     
+def wirteMapper(jt):
+    author = """
+/**
+* 本段代码由sql2java自动生成.
+* https://github.com/yangting/sql2java
+* @author Yate
+*/\n"""
+    s = "package "+jt.pkg+".metadata.dao.mapper;\n"
+    s +="import org.springframework.stereotype.Repository;\n"
+    s +="import "+jt.pkg+".metadata.dao.IBaseMapperDao;\n"
+    s +="import "+jt.pkg+".metadata.entity."+jt.clazz+";\n\n"
+    s += author
+    s += "@Repository\n"
+    s +="public interface "+jt.clazz+"Mapper extends IBaseMapperDao<"+jt.clazz+", "+jt.fields[0].java_type+">{\n" 
+    s +="}\n" 
 
+    x = jt.pkg.replace(".", "/")
+    if not os.path.exists("src/main/java/"+x+"/metadata/dao/mapper"):
+        os.makedirs("src/main/java/"+x+"/metadata/dao/mapper")
+
+    f = open("src/main/java/"+x+"/metadata/dao/mapper/"+jt.clazz+"Mapper.java",'w')
+    f.write(s) # python will convert \n to os.linesep
+    f.close() # you can omit in most cases as the destructor will call it
+
+    base="""import java.util.List;
+
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+
+/**
+* 本段代码由sql2java自动生成.
+* https://github.com/yangting/sql2java
+* @author Yate
+*/
+public interface IBaseMapperDao<E, PK> {
+    /**
+     * @description 通过实体进行添加
+     * @param e
+     */
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void add(final E e);
+
+    /**
+     * @description 通过集合进行批量添加
+     * @param e
+     */
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void batchAdd(final List<E> list);
+
+    /**
+     * @description 通过主键进行删除
+     * @param e
+     */
+    Integer remove(@Param(value = "id") final PK e);
+
+    /**
+     * @description 通过主键进行批量删除
+     * @param e
+     */
+    void batchRemove(final PK[] ids);
+
+    /**
+     * @description 通过实体更新
+     * @param e
+     */
+    Integer update(final E e);
+
+    /**
+     * @description 通过主键查询
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    E getEntity(@Param(value = "id") final PK id);
+}"""
+
+    f1 = open("src/main/java/"+x+"/metadata/dao/IBaseMapperDao.java",'w')
+    f1.write("package "+jt.pkg+".metadata.dao;\n"+base) # python will convert \n to os.linesep
+    f1.close() # you can omit in most cases as the destructor will call it
 
 
 if __name__=='__main__':
