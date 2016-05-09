@@ -61,7 +61,15 @@ def issubstr(s1, s2):
 def get_between(str):
     num1 = str.find("`", 0)
     num2 = str.find("`", num1+1)
-    if num2 -num1 < 0:
+    if num2 -num1 <= 0:
+        return str
+    res = str[(num1+1):num2]
+    return res
+
+def get_field_name(str):
+    num1 = str.find("`", 0)
+    num2 = str.find("`", num1+1)
+    if num2 -num1 <= 0:
         return str
     res = str[(num1+1):num2]
     return res
@@ -343,7 +351,7 @@ if __name__=='__main__':
         else:
             ds = line.split()
             if len(ds) > 0:
-                fname = get_between(ds[0])
+                fname = get_field_name(ds[0])
                 if ds[1]:
                     x = ds[1]
                     ftype = get_field_type(x)
