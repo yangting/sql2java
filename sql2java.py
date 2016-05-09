@@ -211,7 +211,7 @@ def wirteMyBatis(jt):
 
 
     s+="<update id=\"update\">\n"
-    s+="update "+jt.table_name+ "\n<set>"
+    s+="update "+jt.table_name+ "\n<set>\n"
     for f in jt.fields:
         s+="<if test=\""+f.java_fn+"!=null\" >\n"
         s+=f.sql_fn+"=#{"+f.java_fn+"},\n"
