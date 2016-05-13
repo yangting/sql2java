@@ -212,7 +212,7 @@ def wirteMyBatis(jt):
     s+="<foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">\n"
     s+="("
     for f in jt.fields:
-        s+="#{"+f.java_fn+"},"
+        s+="#{item."+f.java_fn+"},"
     s=s[:-1]+")\n"
     s+="</foreach>\n"
     s+="</insert>\n\n"
