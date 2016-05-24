@@ -138,6 +138,8 @@ def py2java(pkg,Database):
         writeDotJava(jt)
         wirteMyBatis(jt)
         wirteMapper(jt)
+        wirteService(jt)
+        wirteBaseService(jt)
 
 
 def writeDotJava(jt):
@@ -328,6 +330,106 @@ public interface IBaseMapperDao<E, PK> {
     f1 = open("src/main/java/"+x+"/metadata/dao/IBaseMapperDao.java",'w')
     f1.write("package "+jt.pkg+".metadata.dao;\n"+base) # python will convert \n to os.linesep
     f1.close() # you can omit in most cases as the destructor will call it
+
+
+def wirteService(jt):
+    author = """
+/**
+* 本段代码由sql2java自动生成.
+* https://github.com/yangting/sql2java
+* @author Yate
+*/\n"""
+    s = "package "+jt.pkg+".service;\n\n"
+    s +="import "+jt.pkg+".metadata.entity."+jt.clazz+";\n\n"
+    s += author
+    s += "public interface I"+jt.clazz+"Service extends IBaseService<"+jt.clazz+","+jt.fields[0].java_type+">{\n\n"
+    s += "}"
+
+    x = jt.pkg.replace(".", "/")
+    if not os.path.exists("src/main/java/"+x+"/service"):
+        os.makedirs("src/main/java/"+x+"/service")
+
+
+    f1 = open("src/main/java/"+x+"/service/I"+jt.clazz+"Service.java",'w')
+    f1.write(s) # python will convert \n to os.linesep
+    f1.close() # you can omit in most cases as the destructor will call it
+
+    s1 ="package "+jt.pkg+".service.impl;\n\n"
+    s1+="import org.springframework.stereotype.Service;\n"
+    s1+="import "+jt.pkg+".metadata.dao.IBaseMapperDao;\n"
+    s1+="import "+jt.pkg+".service.FtpContentService;\n"
+    s1+=author
+    s1+="@Service\n"
+    s1+="public class "+jt.clazz+"ServiceImpl extends BaseServiceImpl<"+jt.clazz+","+jt.fields[0].java_type+"> implements "+jt.clazz+"Service {\n"
+    s1+="@Resource\n"
+    s1+="private "+jt.clazz+"Mapper mapper;\n\n"
+    s1+="protected IBaseMapperDao<"+jt.clazz+","+jt.fields[0].java_type+"> getMapperDao() {\n"
+    s1+="return mapper;\n"    
+    s1+="}"
+
+    x1 = jt.pkg.replace(".", "/")
+    if not os.path.exists("src/main/java/"+x1+"/service/impl"):
+        os.makedirs("src/main/java/"+x1+"/service/impl")
+
+    f1 = open("src/main/java/"+x1+"/service/impl/"+jt.clazz+"ServiceImpl.java",'w')
+    f1.write(s1) # python will convert \n to os.linesep
+    f1.close() # you can omit in most cases as the destructor will call it
+
+
+def wirteBaseService(jt):
+    author = """
+/**
+* 本段代码由sql2java自动生成.
+* https://github.com/yangting/sql2java
+* @author Yate
+*/\n"""
+
+    ibase = """
+/**
+ * 本段代码由sql2java自动生成.
+ * https://github.com/yangting/sql2java
+ * @author Yate
+ */
+public interface IBaseService<E, PK> {
+    void add(final E e);
+
+    void remove(final PK id);
+ 
+    void update(final E e);
+    
+    E getEntity(final PK id);
+}"""
+    
+    x = jt.pkg.replace(".", "/")
+    if not os.path.exists("src/main/java/"+x+"/service"):
+        os.makedirs("src/main/java/"+x+"/service")
+
+    f1 = open("src/main/java/"+x+"/service/IBaseService.java",'w')
+    f1.write("package "+jt.pkg+".service;\n"+ibase) # python will convert \n to os.linesep
+    f1.close() # you can omit in most cases as the destructor will call it
+
+    xbase ="import "+jt.pkg+".dao.IBaseMapperDao;\n"
+    xbase +="import "+jt.pkg+".service.IBaseService;\n\n"
+    xbase +=author
+    xbase +="public abstract class BaseServiceImpl<E, PK> implements IBaseService<E, PK> {\n"
+    xbase +="protected abstract IBaseMapperDao<E, PK> getMapperDao();\n"
+    xbase +="public void add(E e) {\n"
+    xbase +="this.getMapperDao().add(e);\n"
+    xbase +="}\n\n"
+    xbase +="public void remove(PK id) {\n"
+    xbase +="this.getMapperDao().remove(id);\n"
+    xbase +="}\n\n"
+    xbase +="public void update(E e) {\n"
+    xbase +="this.getMapperDao().update(e);\n"
+    xbase +="}\n\n"
+    xbase +="public E getEntity(PK id) {\n"
+    xbase +="return this.getMapperDao().getEntity(id);\n"
+    xbase +="}\n\n}"
+
+    f1 = open("src/main/java/"+x+"/service/impl/BaseServiceImpl.java",'w')
+    f1.write("package "+jt.pkg+".service.impl;\n\n"+xbase) # python will convert \n to os.linesep
+    f1.close() # you can omit in most cases as the destructor will call it
+
 
 
 if __name__=='__main__':
