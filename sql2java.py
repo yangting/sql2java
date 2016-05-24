@@ -356,16 +356,19 @@ def wirteService(jt):
 
     s1 ="package "+jt.pkg+".service.impl;\n\n"
     s1+="import org.springframework.stereotype.Service;\n"
+    s1+="import javax.annotation.Resource;\n"
     s1+="import "+jt.pkg+".metadata.dao.IBaseMapperDao;\n"
-    s1+="import "+jt.pkg+".service.FtpContentService;\n"
+    s1+="import "+jt.pkg+".metadata.dao.mapper."+jt.clazz+"Mapper;\n"
+    s1+="import "+jt.pkg+".service.I"+jt.clazz+"Service;\n"
+    s1+="import one.yate.test.metadata.entity."+jt.clazz+";\n\n"
     s1+=author
     s1+="@Service\n"
-    s1+="public class "+jt.clazz+"ServiceImpl extends BaseServiceImpl<"+jt.clazz+","+jt.fields[0].java_type+"> implements "+jt.clazz+"Service {\n"
+    s1+="public class "+jt.clazz+"ServiceImpl extends BaseServiceImpl<"+jt.clazz+","+jt.fields[0].java_type+"> implements I"+jt.clazz+"Service {\n"
     s1+="@Resource\n"
     s1+="private "+jt.clazz+"Mapper mapper;\n\n"
     s1+="protected IBaseMapperDao<"+jt.clazz+","+jt.fields[0].java_type+"> getMapperDao() {\n"
     s1+="return mapper;\n"    
-    s1+="}"
+    s1+="}\n}"
 
     x1 = jt.pkg.replace(".", "/")
     if not os.path.exists("src/main/java/"+x1+"/service/impl"):
@@ -385,6 +388,9 @@ def wirteBaseService(jt):
 */\n"""
 
     ibase = """
+
+    import java.util.List;
+
 /**
  * 本段代码由sql2java自动生成.
  * https://github.com/yangting/sql2java
@@ -393,11 +399,16 @@ def wirteBaseService(jt):
 public interface IBaseService<E, PK> {
     void add(final E e);
 
-    void remove(final PK id);
+    void batchAdd(final List<E> list);
+
+    int remove(final PK id);
+
+    void batchRemove(final PK[] ids);
  
-    void update(final E e);
+    int update(final E e);
     
     E getEntity(final PK id);
+
 }"""
     
     x = jt.pkg.replace(".", "/")
@@ -408,19 +419,26 @@ public interface IBaseService<E, PK> {
     f1.write("package "+jt.pkg+".service;\n"+ibase) # python will convert \n to os.linesep
     f1.close() # you can omit in most cases as the destructor will call it
 
-    xbase ="import "+jt.pkg+".dao.IBaseMapperDao;\n"
-    xbase +="import "+jt.pkg+".service.IBaseService;\n\n"
+    xbase ="import "+jt.pkg+".metadata.dao.IBaseMapperDao;\n"
+    xbase +="import "+jt.pkg+".service.IBaseService;\n"
+    xbase +="import java.util.List;\n\n"
     xbase +=author
     xbase +="public abstract class BaseServiceImpl<E, PK> implements IBaseService<E, PK> {\n"
     xbase +="protected abstract IBaseMapperDao<E, PK> getMapperDao();\n"
     xbase +="public void add(E e) {\n"
     xbase +="this.getMapperDao().add(e);\n"
     xbase +="}\n\n"
-    xbase +="public void remove(PK id) {\n"
-    xbase +="this.getMapperDao().remove(id);\n"
+    xbase +="public void batchAdd(List<E> list) {\n"
+    xbase +="this.getMapperDao().batchAdd(list);\n"
     xbase +="}\n\n"
-    xbase +="public void update(E e) {\n"
-    xbase +="this.getMapperDao().update(e);\n"
+    xbase +="public int remove(PK id) {\n"
+    xbase +="return this.getMapperDao().remove(id);\n"
+    xbase +="}\n\n"
+    xbase +="public void batchRemove(PK[] ids) {\n"
+    xbase +="this.getMapperDao().batchRemove(ids);\n"
+    xbase +="}\n\n"
+    xbase +="public int update(E e) {\n"
+    xbase +="return this.getMapperDao().update(e);\n"
     xbase +="}\n\n"
     xbase +="public E getEntity(PK id) {\n"
     xbase +="return this.getMapperDao().getEntity(id);\n"
