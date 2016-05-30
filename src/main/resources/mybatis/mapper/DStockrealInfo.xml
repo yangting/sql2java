@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.data.dataprocess.metadata.dao.mapper.DStockrealInfoMapper">
+
+<resultMap type="cn.data.dataprocess.metadata.entity.DStockrealInfo" id="DStockrealInfoMap">
+<id property="id" column="id" />
+<result property="otcAccount" column="otc_account" />
+<result property="otcCode" column="otc_code" />
+<result property="branchNo" column="branch_no" />
+<result property="otcexchType" column="otcexch_type" />
+<result property="fundAccount" column="fund_account" />
+<result property="clientId" column="client_id" />
+<result property="moneyType" column="money_type" />
+<result property="otcType" column="otc_type" />
+<result property="currentAmount" column="current_amount" />
+<result property="uncomeBuyAmount" column="uncome_buy_amount" />
+<result property="uncomeSellAmount" column="uncome_sell_amount" />
+<result property="frozenAmount" column="frozen_amount" />
+<result property="unfrozenAmount" column="unfrozen_amount" />
+<result property="correctAmount" column="correct_amount" />
+<result property="enableAmount" column="enable_amount" />
+<result property="realBuyAmount" column="real_buy_amount" />
+<result property="realBuyBalance" column="real_buy_balance" />
+<result property="realSellAmount" column="real_sell_amount" />
+<result property="realSellBalance" column="real_sell_balance" />
+<result property="entrustSellAmount" column="entrust_sell_amount" />
+<result property="sumBuyAmount" column="sum_buy_amount" />
+<result property="sumBuyBalance" column="sum_buy_balance" />
+<result property="sumSellAmount" column="sum_sell_amount" />
+<result property="sumSellBalance" column="sum_sell_balance" />
+<result property="costPrice" column="cost_price" />
+<result property="checkStr" column="check_str" />
+<result property="positionStr" column="position_str" />
+</resultMap>
+
+<!-- auto implement code by cn.data.dataprocess.metadata.dao.IBaseMapperDao.java -->
+<select id="getEntity" resultMap="DStockrealInfoMap">
+select * from d_stockreal_info where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into d_stockreal_info(id,otc_account,otc_code,branch_no,otcexch_type,fund_account,client_id,money_type,otc_type,current_amount,uncome_buy_amount,uncome_sell_amount,frozen_amount,unfrozen_amount,correct_amount,enable_amount,real_buy_amount,real_buy_balance,real_sell_amount,real_sell_balance,entrust_sell_amount,sum_buy_amount,sum_buy_balance,sum_sell_amount,sum_sell_balance,cost_price,check_str,position_str) values(#{id},#{otcAccount},#{otcCode},#{branchNo},#{otcexchType},#{fundAccount},#{clientId},#{moneyType},#{otcType},#{currentAmount},#{uncomeBuyAmount},#{uncomeSellAmount},#{frozenAmount},#{unfrozenAmount},#{correctAmount},#{enableAmount},#{realBuyAmount},#{realBuyBalance},#{realSellAmount},#{realSellBalance},#{entrustSellAmount},#{sumBuyAmount},#{sumBuyBalance},#{sumSellAmount},#{sumSellBalance},#{costPrice},#{checkStr},#{positionStr})
+</insert>
+
+<insert id="batchAdd">insert into d_stockreal_info(id,otc_account,otc_code,branch_no,otcexch_type,fund_account,client_id,money_type,otc_type,current_amount,uncome_buy_amount,uncome_sell_amount,frozen_amount,unfrozen_amount,correct_amount,enable_amount,real_buy_amount,real_buy_balance,real_sell_amount,real_sell_balance,entrust_sell_amount,sum_buy_amount,sum_buy_balance,sum_sell_amount,sum_sell_balance,cost_price,check_str,position_str) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{item.id},#{item.otcAccount},#{item.otcCode},#{item.branchNo},#{item.otcexchType},#{item.fundAccount},#{item.clientId},#{item.moneyType},#{item.otcType},#{item.currentAmount},#{item.uncomeBuyAmount},#{item.uncomeSellAmount},#{item.frozenAmount},#{item.unfrozenAmount},#{item.correctAmount},#{item.enableAmount},#{item.realBuyAmount},#{item.realBuyBalance},#{item.realSellAmount},#{item.realSellBalance},#{item.entrustSellAmount},#{item.sumBuyAmount},#{item.sumBuyBalance},#{item.sumSellAmount},#{item.sumSellBalance},#{item.costPrice},#{item.checkStr},#{item.positionStr})
+</foreach>
+</insert>
+
+<update id="update">
+update d_stockreal_info
+<set>
+<if test="id!=null" >
+id=#{id},
+</if>
+<if test="otcAccount!=null" >
+otc_account=#{otcAccount},
+</if>
+<if test="otcCode!=null" >
+otc_code=#{otcCode},
+</if>
+<if test="branchNo!=null" >
+branch_no=#{branchNo},
+</if>
+<if test="otcexchType!=null" >
+otcexch_type=#{otcexchType},
+</if>
+<if test="fundAccount!=null" >
+fund_account=#{fundAccount},
+</if>
+<if test="clientId!=null" >
+client_id=#{clientId},
+</if>
+<if test="moneyType!=null" >
+money_type=#{moneyType},
+</if>
+<if test="otcType!=null" >
+otc_type=#{otcType},
+</if>
+<if test="currentAmount!=null" >
+current_amount=#{currentAmount},
+</if>
+<if test="uncomeBuyAmount!=null" >
+uncome_buy_amount=#{uncomeBuyAmount},
+</if>
+<if test="uncomeSellAmount!=null" >
+uncome_sell_amount=#{uncomeSellAmount},
+</if>
+<if test="frozenAmount!=null" >
+frozen_amount=#{frozenAmount},
+</if>
+<if test="unfrozenAmount!=null" >
+unfrozen_amount=#{unfrozenAmount},
+</if>
+<if test="correctAmount!=null" >
+correct_amount=#{correctAmount},
+</if>
+<if test="enableAmount!=null" >
+enable_amount=#{enableAmount},
+</if>
+<if test="realBuyAmount!=null" >
+real_buy_amount=#{realBuyAmount},
+</if>
+<if test="realBuyBalance!=null" >
+real_buy_balance=#{realBuyBalance},
+</if>
+<if test="realSellAmount!=null" >
+real_sell_amount=#{realSellAmount},
+</if>
+<if test="realSellBalance!=null" >
+real_sell_balance=#{realSellBalance},
+</if>
+<if test="entrustSellAmount!=null" >
+entrust_sell_amount=#{entrustSellAmount},
+</if>
+<if test="sumBuyAmount!=null" >
+sum_buy_amount=#{sumBuyAmount},
+</if>
+<if test="sumBuyBalance!=null" >
+sum_buy_balance=#{sumBuyBalance},
+</if>
+<if test="sumSellAmount!=null" >
+sum_sell_amount=#{sumSellAmount},
+</if>
+<if test="sumSellBalance!=null" >
+sum_sell_balance=#{sumSellBalance},
+</if>
+<if test="costPrice!=null" >
+cost_price=#{costPrice},
+</if>
+<if test="checkStr!=null" >
+check_str=#{checkStr},
+</if>
+<if test="positionStr!=null" >
+position_str=#{positionStr},
+</if>
+</set>
+where id=#{id}
+</update>
+
+<delete id="remove">
+delete from d_stockreal_info
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from d_stockreal_info where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>

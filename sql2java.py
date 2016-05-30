@@ -103,6 +103,8 @@ def sqltype2javatype(type):
         return "String"
     if type == 'datetime': 
         return "Date"
+    if type == 'date':
+        return "Date"
     if type == 'decimal':
         return "Double"
     
@@ -156,6 +158,7 @@ def writeDotJava(jt):
     s +="public class "+jt.clazz+" implements Serializable{\n"        
 
     for f in jt.fields:
+        #print jt.clazz,f.java_type ,f.java_fn
         s+="private "+f.java_type +" "+f.java_fn+";\n"
 
     for f in jt.fields:
@@ -476,6 +479,7 @@ if __name__=='__main__':
                     x = ds[1]
                     ftype = get_field_type(x)
                     flen = get_field_length(x)
+                    #print db.GetLastTable().name,fname,ftype,flen
                     db.GetLastTable().AddField(fname,ftype,flen,False)
         line = f.readline()
     f.close()

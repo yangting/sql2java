@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.data.dataprocess.metadata.dao.mapper.DFundInfoMapper">
+
+<resultMap type="cn.data.dataprocess.metadata.entity.DFundInfo" id="DFundInfoMap">
+<id property="id" column="id" />
+<result property="clientId" column="client_id" />
+<result property="fundAccount" column="fund_account" />
+<result property="moneyType" column="money_type" />
+<result property="rateKind" column="rate_kind" />
+<result property="branchNo" column="branch_no" />
+<result property="beginBalance" column="begin_balance" />
+<result property="currentBalance" column="current_balance" />
+<result property="cashBalance" column="cash_balance" />
+<result property="checkBalance" column="check_balance" />
+<result property="frozenBalance" column="frozen_balance" />
+<result property="unfrozenBalance" column="unfrozen_balance" />
+<result property="correctBalance" column="correct_balance" />
+<result property="foregiftBalance" column="foregift_balance" />
+<result property="mortgageBalance" column="mortgage_balance" />
+<result property="integralBalance" column="integral_balance" />
+<result property="fineIntegral" column="fine_integral" />
+<result property="interest" column="interest" />
+<result property="interestTax" column="interest_tax" />
+<result property="integralUpdate" column="integral_update" />
+<result property="bankNo" column="bank_no" />
+<result property="squareFlag" column="square_flag" />
+<result property="checkStr" column="check_str" />
+<result property="positionStr" column="position_str" />
+</resultMap>
+
+<!-- auto implement code by cn.data.dataprocess.metadata.dao.IBaseMapperDao.java -->
+<select id="getEntity" resultMap="DFundInfoMap">
+select * from d_fund_info where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into d_fund_info(id,client_id,fund_account,money_type,rate_kind,branch_no,begin_balance,current_balance,cash_balance,check_balance,frozen_balance,unfrozen_balance,correct_balance,foregift_balance,mortgage_balance,integral_balance,fine_integral,interest,interest_tax,integral_update,bank_no,square_flag,check_str,position_str) values(#{id},#{clientId},#{fundAccount},#{moneyType},#{rateKind},#{branchNo},#{beginBalance},#{currentBalance},#{cashBalance},#{checkBalance},#{frozenBalance},#{unfrozenBalance},#{correctBalance},#{foregiftBalance},#{mortgageBalance},#{integralBalance},#{fineIntegral},#{interest},#{interestTax},#{integralUpdate},#{bankNo},#{squareFlag},#{checkStr},#{positionStr})
+</insert>
+
+<insert id="batchAdd">insert into d_fund_info(id,client_id,fund_account,money_type,rate_kind,branch_no,begin_balance,current_balance,cash_balance,check_balance,frozen_balance,unfrozen_balance,correct_balance,foregift_balance,mortgage_balance,integral_balance,fine_integral,interest,interest_tax,integral_update,bank_no,square_flag,check_str,position_str) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{item.id},#{item.clientId},#{item.fundAccount},#{item.moneyType},#{item.rateKind},#{item.branchNo},#{item.beginBalance},#{item.currentBalance},#{item.cashBalance},#{item.checkBalance},#{item.frozenBalance},#{item.unfrozenBalance},#{item.correctBalance},#{item.foregiftBalance},#{item.mortgageBalance},#{item.integralBalance},#{item.fineIntegral},#{item.interest},#{item.interestTax},#{item.integralUpdate},#{item.bankNo},#{item.squareFlag},#{item.checkStr},#{item.positionStr})
+</foreach>
+</insert>
+
+<update id="update">
+update d_fund_info
+<set>
+<if test="id!=null" >
+id=#{id},
+</if>
+<if test="clientId!=null" >
+client_id=#{clientId},
+</if>
+<if test="fundAccount!=null" >
+fund_account=#{fundAccount},
+</if>
+<if test="moneyType!=null" >
+money_type=#{moneyType},
+</if>
+<if test="rateKind!=null" >
+rate_kind=#{rateKind},
+</if>
+<if test="branchNo!=null" >
+branch_no=#{branchNo},
+</if>
+<if test="beginBalance!=null" >
+begin_balance=#{beginBalance},
+</if>
+<if test="currentBalance!=null" >
+current_balance=#{currentBalance},
+</if>
+<if test="cashBalance!=null" >
+cash_balance=#{cashBalance},
+</if>
+<if test="checkBalance!=null" >
+check_balance=#{checkBalance},
+</if>
+<if test="frozenBalance!=null" >
+frozen_balance=#{frozenBalance},
+</if>
+<if test="unfrozenBalance!=null" >
+unfrozen_balance=#{unfrozenBalance},
+</if>
+<if test="correctBalance!=null" >
+correct_balance=#{correctBalance},
+</if>
+<if test="foregiftBalance!=null" >
+foregift_balance=#{foregiftBalance},
+</if>
+<if test="mortgageBalance!=null" >
+mortgage_balance=#{mortgageBalance},
+</if>
+<if test="integralBalance!=null" >
+integral_balance=#{integralBalance},
+</if>
+<if test="fineIntegral!=null" >
+fine_integral=#{fineIntegral},
+</if>
+<if test="interest!=null" >
+interest=#{interest},
+</if>
+<if test="interestTax!=null" >
+interest_tax=#{interestTax},
+</if>
+<if test="integralUpdate!=null" >
+integral_update=#{integralUpdate},
+</if>
+<if test="bankNo!=null" >
+bank_no=#{bankNo},
+</if>
+<if test="squareFlag!=null" >
+square_flag=#{squareFlag},
+</if>
+<if test="checkStr!=null" >
+check_str=#{checkStr},
+</if>
+<if test="positionStr!=null" >
+position_str=#{positionStr},
+</if>
+</set>
+where id=#{id}
+</update>
+
+<delete id="remove">
+delete from d_fund_info
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from d_fund_info where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>

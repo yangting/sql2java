@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.data.dataprocess.metadata.dao.mapper.DCustomerInfoMapper">
+
+<resultMap type="cn.data.dataprocess.metadata.entity.DCustomerInfo" id="DCustomerInfoMap">
+<id property="id" column="id" />
+<result property="customerNo" column="customer_no" />
+<result property="customerStatus" column="customer_status" />
+<result property="cardType" column="card_type" />
+<result property="cardNo" column="card_no" />
+<result property="mobileNo" column="mobile_no" />
+<result property="areaId" column="area_id" />
+<result property="source" column="source" />
+<result property="createdTime" column="created_time" />
+<result property="updatedTime" column="updated_time" />
+<result property="openTime" column="open_time" />
+<result property="signTime" column="sign_time" />
+<result property="activateTime" column="activate_time" />
+<result property="freezeTime" column="freeze_time" />
+<result property="demiseTime" column="demise_time" />
+<result property="managerNo" column="manager_no" />
+<result property="countryNo" column="country_no" />
+<result property="postCode" column="post_code" />
+<result property="address" column="address" />
+<result property="email" column="email" />
+<result property="name" column="name" />
+<result property="selectType" column="select_type" />
+<result property="sex" column="sex" />
+<result property="memberConfirm" column="member_confirm" />
+<result property="confirmedTime" column="confirmed_time" />
+<result property="memberNo" column="member_no" />
+<result property="intermediaryNo" column="intermediary_no" />
+</resultMap>
+
+<!-- auto implement code by cn.data.dataprocess.metadata.dao.IBaseMapperDao.java -->
+<select id="getEntity" resultMap="DCustomerInfoMap">
+select * from d_customer_info where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into d_customer_info(id,customer_no,customer_status,card_type,card_no,mobile_no,area_id,source,created_time,updated_time,open_time,sign_time,activate_time,freeze_time,demise_time,manager_no,country_no,post_code,address,email,name,select_type,sex,member_confirm,confirmed_time,member_no,intermediary_no) values(#{id},#{customerNo},#{customerStatus},#{cardType},#{cardNo},#{mobileNo},#{areaId},#{source},#{createdTime},#{updatedTime},#{openTime},#{signTime},#{activateTime},#{freezeTime},#{demiseTime},#{managerNo},#{countryNo},#{postCode},#{address},#{email},#{name},#{selectType},#{sex},#{memberConfirm},#{confirmedTime},#{memberNo},#{intermediaryNo})
+</insert>
+
+<insert id="batchAdd">insert into d_customer_info(id,customer_no,customer_status,card_type,card_no,mobile_no,area_id,source,created_time,updated_time,open_time,sign_time,activate_time,freeze_time,demise_time,manager_no,country_no,post_code,address,email,name,select_type,sex,member_confirm,confirmed_time,member_no,intermediary_no) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{item.id},#{item.customerNo},#{item.customerStatus},#{item.cardType},#{item.cardNo},#{item.mobileNo},#{item.areaId},#{item.source},#{item.createdTime},#{item.updatedTime},#{item.openTime},#{item.signTime},#{item.activateTime},#{item.freezeTime},#{item.demiseTime},#{item.managerNo},#{item.countryNo},#{item.postCode},#{item.address},#{item.email},#{item.name},#{item.selectType},#{item.sex},#{item.memberConfirm},#{item.confirmedTime},#{item.memberNo},#{item.intermediaryNo})
+</foreach>
+</insert>
+
+<update id="update">
+update d_customer_info
+<set>
+<if test="id!=null" >
+id=#{id},
+</if>
+<if test="customerNo!=null" >
+customer_no=#{customerNo},
+</if>
+<if test="customerStatus!=null" >
+customer_status=#{customerStatus},
+</if>
+<if test="cardType!=null" >
+card_type=#{cardType},
+</if>
+<if test="cardNo!=null" >
+card_no=#{cardNo},
+</if>
+<if test="mobileNo!=null" >
+mobile_no=#{mobileNo},
+</if>
+<if test="areaId!=null" >
+area_id=#{areaId},
+</if>
+<if test="source!=null" >
+source=#{source},
+</if>
+<if test="createdTime!=null" >
+created_time=#{createdTime},
+</if>
+<if test="updatedTime!=null" >
+updated_time=#{updatedTime},
+</if>
+<if test="openTime!=null" >
+open_time=#{openTime},
+</if>
+<if test="signTime!=null" >
+sign_time=#{signTime},
+</if>
+<if test="activateTime!=null" >
+activate_time=#{activateTime},
+</if>
+<if test="freezeTime!=null" >
+freeze_time=#{freezeTime},
+</if>
+<if test="demiseTime!=null" >
+demise_time=#{demiseTime},
+</if>
+<if test="managerNo!=null" >
+manager_no=#{managerNo},
+</if>
+<if test="countryNo!=null" >
+country_no=#{countryNo},
+</if>
+<if test="postCode!=null" >
+post_code=#{postCode},
+</if>
+<if test="address!=null" >
+address=#{address},
+</if>
+<if test="email!=null" >
+email=#{email},
+</if>
+<if test="name!=null" >
+name=#{name},
+</if>
+<if test="selectType!=null" >
+select_type=#{selectType},
+</if>
+<if test="sex!=null" >
+sex=#{sex},
+</if>
+<if test="memberConfirm!=null" >
+member_confirm=#{memberConfirm},
+</if>
+<if test="confirmedTime!=null" >
+confirmed_time=#{confirmedTime},
+</if>
+<if test="memberNo!=null" >
+member_no=#{memberNo},
+</if>
+<if test="intermediaryNo!=null" >
+intermediary_no=#{intermediaryNo},
+</if>
+</set>
+where id=#{id}
+</update>
+
+<delete id="remove">
+delete from d_customer_info
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from d_customer_info where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>

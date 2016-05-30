@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.data.dataprocess.metadata.dao.mapper.PuerBaseStatusMapper">
+
+<resultMap type="cn.data.dataprocess.metadata.entity.PuerBaseStatus" id="PuerBaseStatusMap">
+<id property="id" column="id" />
+<result property="processDate" column="process_date" />
+<result property="currentStatus" column="current_status" />
+<result property="complateDate" column="complate_date" />
+<result property="dCustomerInfo" column="d_customer_info" />
+</resultMap>
+
+<!-- auto implement code by cn.data.dataprocess.metadata.dao.IBaseMapperDao.java -->
+<select id="getEntity" resultMap="PuerBaseStatusMap">
+select * from puer_base_status where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into puer_base_status(id,process_date,current_status,complate_date,d_customer_info) values(#{id},#{processDate},#{currentStatus},#{complateDate},#{dCustomerInfo})
+</insert>
+
+<insert id="batchAdd">insert into puer_base_status(id,process_date,current_status,complate_date,d_customer_info) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{item.id},#{item.processDate},#{item.currentStatus},#{item.complateDate},#{item.dCustomerInfo})
+</foreach>
+</insert>
+
+<update id="update">
+update puer_base_status
+<set>
+<if test="id!=null" >
+id=#{id},
+</if>
+<if test="processDate!=null" >
+process_date=#{processDate},
+</if>
+<if test="currentStatus!=null" >
+current_status=#{currentStatus},
+</if>
+<if test="complateDate!=null" >
+complate_date=#{complateDate},
+</if>
+<if test="dCustomerInfo!=null" >
+d_customer_info=#{dCustomerInfo},
+</if>
+</set>
+where id=#{id}
+</update>
+
+<delete id="remove">
+delete from puer_base_status
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from puer_base_status where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>

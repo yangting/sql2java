@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.data.dataprocess.metadata.dao.mapper.DVarietyInfoMapper">
+
+<resultMap type="cn.data.dataprocess.metadata.entity.DVarietyInfo" id="DVarietyInfoMap">
+<id property="id" column="id" />
+<result property="otcexchType" column="otcexch_type" />
+<result property="otcCode" column="otc_code" />
+<result property="otcType" column="otc_type" />
+<result property="otcName" column="otc_name" />
+</resultMap>
+
+<!-- auto implement code by cn.data.dataprocess.metadata.dao.IBaseMapperDao.java -->
+<select id="getEntity" resultMap="DVarietyInfoMap">
+select * from d_variety_info where id = #{id}
+</select>
+
+<insert id="add">
+<selectKey resultType="Long" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID() AS id
+</selectKey>
+insert into d_variety_info(id,otcexch_type,otc_code,otc_type,otc_name) values(#{id},#{otcexchType},#{otcCode},#{otcType},#{otcName})
+</insert>
+
+<insert id="batchAdd">insert into d_variety_info(id,otcexch_type,otc_code,otc_type,otc_name) values
+<foreach collection="list" item="item" index="index" separator=",">
+(#{item.id},#{item.otcexchType},#{item.otcCode},#{item.otcType},#{item.otcName})
+</foreach>
+</insert>
+
+<update id="update">
+update d_variety_info
+<set>
+<if test="id!=null" >
+id=#{id},
+</if>
+<if test="otcexchType!=null" >
+otcexch_type=#{otcexchType},
+</if>
+<if test="otcCode!=null" >
+otc_code=#{otcCode},
+</if>
+<if test="otcType!=null" >
+otc_type=#{otcType},
+</if>
+<if test="otcName!=null" >
+otc_name=#{otcName},
+</if>
+</set>
+where id=#{id}
+</update>
+
+<delete id="remove">
+delete from d_variety_info
+where id=#{id}
+</delete>
+
+<delete id="batchRemove">
+delete from d_variety_info where id in 
+<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+#{item.id}
+</foreach>
+</delete>
+
+</mapper>
