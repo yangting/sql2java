@@ -7,6 +7,7 @@ __maintainer__ = "Yate"
 
 import sys
 import os
+import re
 
 class Database(object):
     def __init__(self):
@@ -54,6 +55,11 @@ class JavaFieldType:
         self.sql_type = sql_type
         self.java_type = java_type
 
+def issubstr_exp(exp,s):
+    r = re.match(exp,s,re.I)
+    if r:
+        return True;
+    return False;
 
 def issubstr(s1, s2):
     return s1 in s2
@@ -62,7 +68,7 @@ def get_between(str):
     num1 = str.find("`", 0)
     num2 = str.find("`", num1+1)
     if num2 -num1 <= 0:
-        return str
+        return str.split(" ")[-1].replace("(","")
     res = str[(num1+1):num2]
     return res
 
@@ -462,13 +468,13 @@ if __name__=='__main__':
 
     line = f.readline()
     while line:
-        if issubstr("CREATE TABLE", line):
+        if issubstr_exp(".*create.*table.*",line):
             table_name = get_between(line)
             db.AddTable(table_name)
-        elif issubstr("PRIMARY KEY", line):
+        elif issubstr_exp(".*primary.*key.*",line):
             line = f.readline()
             continue
-        elif issubstr("ENGINE", line):
+        elif issubstr_exp(".*engine.*",line):
             line = f.readline()
             continue
         else:
