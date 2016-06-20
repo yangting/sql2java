@@ -164,9 +164,10 @@ def writeDotJava(jt):
 * @author Yate
 */\n"""
 
-    s = "package "+jt.pkg+".metadata.entity;\n"
-    s +="import java.io.Serializable;\n"
+    s = "package "+jt.pkg+".metadata.entity;\n\n"
+    s +="import java.io.Serializable;\n\nimport lombok.EqualsAndHashCode;\nimport lombok.ToString;\nimport lombok.experimental.Accessors;"
     s += author
+    s += "@ToString\n@EqualsAndHashCode(exclude={\""+jt.fields[0].java_fn+"\"})\n@Accessors(fluent=true)"
     s +="public class "+jt.clazz+" implements Serializable{\n"        
 
     for f in jt.fields:
