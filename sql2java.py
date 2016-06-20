@@ -113,6 +113,12 @@ def sqltype2javatype(type):
         return "Date"
     if type == 'decimal':
         return "Double"
+    if type == 'double':
+        return "Double"
+    if type == 'float':
+        return "Double"
+    if type == 'text':
+        return "String"
     
 
 def py2java(pkg,Database):
@@ -468,8 +474,18 @@ if __name__=='__main__':
 
     line = f.readline()
     while line:
+        if issubstr_exp(".*SET.*FOREIGN_KEY_CHECKS.*",line):
+            line = f.readline()
+            continue
+        if issubstr_exp("^--.*",line):
+            line = f.readline()
+            continue
+        if issubstr_exp(".*drop.*table.*",line):
+            line = f.readline()
+            continue
         if issubstr_exp(".*create.*table.*",line):
             table_name = get_between(line)
+            #print table_name
             db.AddTable(table_name)
         elif issubstr_exp(".*primary.*key.*",line):
             line = f.readline()
