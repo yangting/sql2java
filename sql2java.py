@@ -101,6 +101,8 @@ def sqltype2javatype(type):
         return "Integer"
     if type == 'tinyint':
         return "Integer"
+    if type == 'smallint':
+        return "Integer"
     if type == 'bigint':
         return "Long"
     if type == 'varchar': 
