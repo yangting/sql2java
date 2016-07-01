@@ -24,10 +24,17 @@ class Table:
     def __init__(self,name):
         self.name=name
         self.fields=[]
+        self.pks=[]
 
     def AddField(self,name,t,length,IsPK):
         fd = Field(name,t,length,IsPK)
         self.fields.append(fd)
+
+    def AddPK(self,name):
+        self.pks.append(name)
+        for f in self.fields:
+            if f.name == name:
+                f.IsPK = True
 
 
 class Field:
@@ -44,16 +51,17 @@ class JavaType:
         self.clazz = ""
         self.fields = []
 
-    def AddJavaField(self,sql_fn,java_fn,sql_type,java_type):
-        fd = JavaFieldType(sql_fn,java_fn,sql_type,java_type)
+    def AddJavaField(self,sql_fn,java_fn,sql_type,java_type,IsPK):
+        fd = JavaFieldType(sql_fn,java_fn,sql_type,java_type,IsPK)
         self.fields.append(fd)
 
 class JavaFieldType:
-    def __init__(self,sql_fn,java_fn,sql_type,java_type):
+    def __init__(self,sql_fn,java_fn,sql_type,java_type,IsPK):
         self.sql_fn = sql_fn
         self.java_fn = java_fn
         self.sql_type = sql_type
         self.java_type = java_type
+        self.IsPK = IsPK
 
 def issubstr_exp(exp,s):
     r = re.match(exp,s,re.I)
@@ -125,14 +133,14 @@ def sqltype2javatype(type):
 
 def py2java(pkg,Database):
     for ts in db.tables: 
-        jt = JavaType(pkg,ts.name)
+        jt = JavaType(pkg,ts.name.replace("\n",""))
 
         javaclass=""
         tmp1 = ts.name.split("_")
         for x1 in tmp1:
             javaclass += x1.capitalize()
 
-        jt.clazz = javaclass
+        jt.clazz = javaclass.replace("\n","")
         
         
         for fs in ts.fields:
@@ -149,7 +157,7 @@ def py2java(pkg,Database):
                     java_fn += x2.capitalize()
             java_type=sqltype2javatype(fs.type)
 
-            jt.AddJavaField(sql_fn,java_fn,sql_type,java_type)
+            jt.AddJavaField(sql_fn,java_fn,sql_type,java_type,fs.IsPK)
 
         writeDotJava(jt)
         wirteMyBatis(jt)
@@ -195,19 +203,21 @@ def wirteMyBatis(jt):
     s+="<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n"
     s+="<mapper namespace=\""+jt.pkg+".metadata.dao.mapper."+jt.clazz+"Mapper\">\n\n"
 
-    isId = True
     s+="<resultMap type=\""+jt.pkg+".metadata.entity."+jt.clazz+"\" id=\""+jt.clazz+"Map\">\n"
     for f in jt.fields:
-        if isId:
+        if f.IsPK:
             s+="<id property=\""+f.java_fn+"\" column=\""+f.sql_fn+"\" />\n"
-            isId=False
         else:
             s+="<result property=\""+f.java_fn+"\" column=\""+f.sql_fn+"\" />\n"
     s+="</resultMap>\n\n"
 
     s+="<!-- auto implement code by "+jt.pkg+".metadata.dao.IBaseMapperDao.java -->\n"
     s+="<select id=\"getEntity\" resultMap=\""+jt.clazz+"Map\">\n"
-    s+="select * from "+jt.table_name+" where id = #{"+jt.fields[0].java_fn+"}\n"
+    s+="select * from "+jt.table_name+" where "
+    for f in jt.fields:
+        if f.IsPK:
+            s+= f.sql_fn + "= #{"+f.java_fn+"} and "
+    s = s[0:-4]+"\n"
     s+="</select>\n\n"
 
 
@@ -217,22 +227,26 @@ def wirteMyBatis(jt):
     s+="</selectKey>\n"
     s+="insert into "+jt.table_name+"("
     for f in jt.fields:
-        s+=f.sql_fn+","
+        if not f.IsPK:
+            s+=f.sql_fn+","
     s=s[:-1]+") values("
     for f in jt.fields:
-        s+="#{"+f.java_fn+"},"
+        if not f.IsPK:
+            s+="#{"+f.java_fn+"},"
     s=s[:-1]+")\n"
     s+="</insert>\n\n"
 
     s+="<insert id=\"batchAdd\">"
     s+="insert into "+jt.table_name+"("
     for f in jt.fields:
-        s+=f.sql_fn+","
+        if not f.IsPK:
+            s+=f.sql_fn+","
     s=s[:-1]+") values\n"
     s+="<foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">\n"
     s+="("
     for f in jt.fields:
-        s+="#{item."+f.java_fn+"},"
+        if not f.IsPK:
+            s+="#{item."+f.java_fn+"},"
     s=s[:-1]+")\n"
     s+="</foreach>\n"
     s+="</insert>\n\n"
@@ -241,9 +255,10 @@ def wirteMyBatis(jt):
     s+="<update id=\"update\">\n"
     s+="update "+jt.table_name+ "\n<set>\n"
     for f in jt.fields:
-        s+="<if test=\""+f.java_fn+"!=null\" >\n"
-        s+=f.sql_fn+"=#{"+f.java_fn+"},\n"
-        s+="</if>\n"
+        if not f.IsPK:
+            s+="<if test=\""+f.java_fn+"!=null\" >\n"
+            s+=f.sql_fn+"=#{"+f.java_fn+"},\n"
+            s+="</if>\n"
     s+="</set>\n"
     s+="where "+jt.fields[0].sql_fn+"=#{"+jt.fields[0].java_fn+"}\n"
     s+="</update>\n\n"
@@ -483,6 +498,9 @@ if __name__=='__main__':
         if issubstr_exp("^--.*",line):
             line = f.readline()
             continue
+        if issubstr_exp("^/\*.*",line):
+            line = f.readline()
+            continue
         if issubstr_exp(".*drop.*table.*",line):
             line = f.readline()
             continue
@@ -491,6 +509,16 @@ if __name__=='__main__':
             #print table_name
             db.AddTable(table_name)
         elif issubstr_exp(".*primary.*key.*",line):
+            r = re.match(".*\((.*)\)",line,re.I)
+            if r:
+                pkstr = r.group(1)
+                pkarr = pkstr.split(',')
+                #print pkstr,pkarr
+                for x in pkarr:
+                    db.GetLastTable().AddPK(x)
+            line = f.readline()            
+            continue
+        elif issubstr_exp("\s*key.*",line):
             line = f.readline()
             continue
         elif issubstr_exp(".*engine.*",line):
