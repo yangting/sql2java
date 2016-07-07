@@ -118,15 +118,15 @@ def sqltype2javatype(type):
     if type == 'char': 
         return "String"
     if type == 'datetime': 
-        return "Date"
+        return "java.util.Date"
     if type == 'date':
-        return "Date"
+        return "java.util.Date"
     if type == 'decimal':
-        return "Double"
+        return "java.math.BigDecimal"
     if type == 'double':
-        return "Double"
+        return "java.math.BigDecimal"
     if type == 'float':
-        return "Double"
+        return "java.math.BigDecimal"
     if type == 'text':
         return "String"
     
