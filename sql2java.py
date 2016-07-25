@@ -217,6 +217,8 @@ def wirteMyBatis(jt):
     for f in jt.fields:
         if f.IsPK:
             s+= f.sql_fn + "= #{"+f.java_fn+"} and "
+        else
+            s+= "id = #{id} and "
     s = s[0:-4]+"\n"
     s+="</select>\n\n"
 
