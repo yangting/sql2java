@@ -217,7 +217,7 @@ def wirteMyBatis(jt):
     for f in jt.fields:
         if f.IsPK:
             s+= f.sql_fn + "= #{"+f.java_fn+"} and "
-        else
+        else:
             s+= "id = #{id} and "
     s = s[0:-4]+"\n"
     s+="</select>\n\n"
@@ -517,7 +517,8 @@ if __name__=='__main__':
                 pkarr = pkstr.split(',')
                 #print pkstr,pkarr
                 for x in pkarr:
-                    db.GetLastTable().AddPK(x)
+                    #print x.replace("`","")
+                    db.GetLastTable().AddPK(x.replace("`",""))
             line = f.readline()            
             continue
         elif issubstr_exp("\s*key.*",line):
