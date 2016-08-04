@@ -217,8 +217,6 @@ def wirteMyBatis(jt):
     for f in jt.fields:
         if f.IsPK:
             s+= f.sql_fn + "= #{"+f.java_fn+"} and "
-        else:
-            s+= "id = #{id} and "
     s = s[0:-4]+"\n"
     s+="</select>\n\n"
 
@@ -282,7 +280,7 @@ def wirteMyBatis(jt):
     if not os.path.exists("src/main/resources/mybatis/mapper"):
         os.makedirs("src/main/resources/mybatis/mapper")
 
-    f = open("src/main/resources/mybatis/mapper/"+jt.clazz+".xml",'w')
+    f = open("src/main/resources/mybatis/mapper/"+jt.clazz+"Mapper.xml",'w')
     f.write(s) # python will convert \n to os.linesep
     f.close() # you can omit in most cases as the destructor will call it
     
