@@ -91,9 +91,13 @@ def get_field_name(str):
 def get_field_type(str):
     num1 = str.find("(", 0)
     num2 = str.find(")", num1+1)
+    print str,num1,num2
+    if num2 == -1 and num1 > 0:
+        return str[:num1]
     if num2 -num1 <= 0:
         return str
     res = str[:num1]
+    print str,num1,num2,res
     return res
 
 def get_field_length(str):
@@ -117,6 +121,8 @@ def sqltype2javatype(type):
         return "String"
     if type == 'char': 
         return "String"
+    if type == 'timestamp':
+        return "java.util.Date"
     if type == 'datetime': 
         return "java.util.Date"
     if type == 'date':
@@ -177,11 +183,11 @@ def writeDotJava(jt):
     s = "package "+jt.pkg+".metadata.entity;\n\n"
     s +="import java.io.Serializable;\n\nimport lombok.EqualsAndHashCode;\nimport lombok.ToString;\nimport lombok.experimental.Accessors;"
     s += author
-    s += "@ToString\n@EqualsAndHashCode(exclude={\""+jt.fields[0].java_fn+"\"})\n@Accessors(fluent=true)"
+    s += "@ToString\n@EqualsAndHashCode(exclude={\""+jt.fields[0].java_fn+"\"})\n"
     s +="public class "+jt.clazz+" implements Serializable{\n"        
 
     for f in jt.fields:
-        #print jt.clazz,f.java_type ,f.java_fn
+        print jt.clazz,f.java_type ,f.java_fn
         s+="private "+f.java_type +" "+f.java_fn+";\n"
 
     for f in jt.fields:
@@ -393,7 +399,7 @@ def wirteService(jt):
     s1+="import "+jt.pkg+".metadata.dao.IBaseMapperDao;\n"
     s1+="import "+jt.pkg+".metadata.dao.mapper."+jt.clazz+"Mapper;\n"
     s1+="import "+jt.pkg+".service.I"+jt.clazz+"Service;\n"
-    s1+="import one.yate.test.metadata.entity."+jt.clazz+";\n\n"
+    s1+="import "+jt.pkg+".metadata.entity."+jt.clazz+";\n\n"
     s1+=author
     s1+="@Service\n"
     s1+="public class "+jt.clazz+"ServiceImpl extends BaseServiceImpl<"+jt.clazz+","+jt.fields[0].java_type+"> implements I"+jt.clazz+"Service {\n"
@@ -491,7 +497,30 @@ if __name__=='__main__':
     db = Database()
 
     line = f.readline()
+    skip = False
     while line:
+        print line
+        if skip :
+            if issubstr_exp(".*\*/",line):
+                skip = False
+                line = f.readline()
+                continue
+            else:
+                line = f.readline()
+                continue
+        if issubstr_exp("^/\*.*",line):
+            skip = True
+            line = f.readline()
+            continue
+        if issubstr_exp("^SET.*",line):
+            line = f.readline()
+            continue
+        if issubstr_exp(".*INDEX.*",line):
+            line = f.readline()
+            continue
+        if issubstr_exp("DROP.*",line):
+            line = f.readline()
+            continue
         if issubstr_exp(".*SET.*FOREIGN_KEY_CHECKS.*",line):
             line = f.readline()
             continue
@@ -506,7 +535,7 @@ if __name__=='__main__':
             continue
         if issubstr_exp(".*create.*table.*",line):
             table_name = get_between(line)
-            #print table_name
+            print table_name
             db.AddTable(table_name)
         elif issubstr_exp(".*primary.*key.*",line):
             r = re.match(".*\((.*)\)",line,re.I)
@@ -533,7 +562,11 @@ if __name__=='__main__':
                     x = ds[1]
                     ftype = get_field_type(x)
                     flen = get_field_length(x)
-                    #print db.GetLastTable().name,fname,ftype,flen
+                    print "test=",db.GetLastTable().name,fname,ftype,flen
+                    if fname == None :
+                        break;
+                    if ftype == None :
+                        break;
                     db.GetLastTable().AddField(fname,ftype,flen,False)
         line = f.readline()
     f.close()
